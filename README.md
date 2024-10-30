@@ -89,7 +89,7 @@ Please contact [Guangqi Jiang](https://luccachiang.github.io/) if you are intere
 We are glag if you find this work helpful. Please consider citing:
 ```
 @article{jiang2024robots,
-        title={Robots Pre-Train Robots: Manipulation-Centric Robotic Representation from Large-Scale Robot Dataset},
+        title={Robots Pre-Train Robots: Manipulation-Centric Robotic Representation from Large-Scale Robot Datasets},
         author={Jiang, Guangqi and Sun, Yifei and Huang, Tao and Li, Huanyu and Liang, Yongyuan and Xu, Huazhe},
         journal={arXiv preprint arXiv:2410.22325},
         year={2024}
