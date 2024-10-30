@@ -1,4 +1,4 @@
-# [🧸 Robots Pre-Train Robots: Manipulation-Centric Robotic Representation from Large-Scale Robot Dataset](https://robots-pretrain-robots.github.io/)
+# [🧸 Robots Pre-Train Robots: Manipulation-Centric Robotic Representation from Large-Scale Robot Datasets](https://robots-pretrain-robots.github.io/)
 
 <a href="https://robots-pretrain-robots.github.io/"><strong>Project Page</strong></a>
   |
