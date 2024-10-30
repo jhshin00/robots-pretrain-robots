@@ -86,7 +86,7 @@ Please contact [Guangqi Jiang](https://luccachiang.github.io/) if you are intere
 
 # 📝 BibTeX
 
-We are glag if you find this work helpful. Please consider citing:
+We will be glad if you find this work helpful. Please consider citing:
 ```
 @article{jiang2024robots,
         title={Robots Pre-Train Robots: Manipulation-Centric Robotic Representation from Large-Scale Robot Datasets},
