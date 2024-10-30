@@ -88,10 +88,10 @@ Please contact [Guangqi Jiang](https://luccachiang.github.io/) if you are intere
 
 We are glag if you find this work helpful. Please consider citing:
 ```
-@article{ze2024humanoid_manipulation,
-  title   = {Generalizable Humanoid Manipulation with Improved 3D Diffusion Policies},
-  author  = {Yanjie Ze and Zixuan Chen and Wenhao Wang and Tianyi Chen and Xialin He and Ying Yuan and Xue Bin Peng and Jiajun Wu},
-  year    = {2024},
-  journal = {arXiv preprint arXiv:2410.10803}
-}
+@article{jiang2024robots,
+        title={Robots Pre-Train Robots: Manipulation-Centric Robotic Representation from Large-Scale Robot Dataset},
+        author={Jiang, Guangqi and Sun, Yifei and Huang, Tao and Li, Huanyu and Liang, Yongyuan and Xu, Huazhe},
+        journal={arXiv preprint arXiv:2410.22325},
+        year={2024}
+        }
 ```
