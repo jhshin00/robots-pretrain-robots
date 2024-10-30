@@ -2,7 +2,7 @@
 
 <a href="https://robots-pretrain-robots.github.io/"><strong>Project Page</strong></a>
   |
-  <a href="https://robots-pretrain-robots.github.io/"><strong>arXiv</strong></a>
+  <a href="https://arxiv.org/abs/2410.22325"><strong>arXiv</strong></a>
   |
   <a href="https://x.com/LuccaChiang"><strong>Twitter</strong></a> 
   | <a href="https://huggingface.co/GqJiang/robots-pretrain-robots"><strong>Dataset & Model</strong></a>
