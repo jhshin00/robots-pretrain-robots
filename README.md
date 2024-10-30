@@ -23,7 +23,7 @@
 
 # 🗞️ News
 
-- **2024-10-30** Release our paper on ArXiv.
+- **2024-10-29** Release our paper on ArXiv.
 
 
 # 🛠️ Installation
