@@ -1,11 +1,5 @@
 name: mcr
 channels:
-  - https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/pytorch
-  - http://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/msys2
-  - http://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/pro
-  - http://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/r
-  - http://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free
-  - http://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main
   - pytorch
   - nvidia
   - conda-forge
@@ -74,3 +68,4 @@ dependencies:
     - urllib3==1.26.8
     - pandas==2.0.3
     - wandb
+    - ipdb

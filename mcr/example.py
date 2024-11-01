@@ -9,16 +9,15 @@ import torchvision.transforms as T
 import numpy as np
 from PIL import Image
 
-from r3m import load_r3m
+from mcr import load_mcr
 
 if torch.cuda.is_available():
     device = "cuda"
 else:
     device = "cpu"
 
-r3m = load_r3m("resnet50") # resnet18, resnet34
-r3m.eval()
-r3m.to(device)
+mcr = load_mcr(ckpt_path='ckpts/mcr_resnet50.pth') # mcr is a resnet
+mcr.to(device)
 
 ## DEFINE PREPROCESSING
 transforms = T.Compose([T.Resize(256),
@@ -28,7 +27,7 @@ transforms = T.Compose([T.Resize(256),
 ## ENCODE IMAGE
 image = np.random.randint(0, 255, (500, 500, 3))
 preprocessed_image = transforms(Image.fromarray(image.astype(np.uint8))).reshape(-1, 3, 224, 224)
-preprocessed_image.to(device) 
+preprocessed_image.to(device)
 with torch.no_grad():
-  embedding = r3m(preprocessed_image * 255.0) ## R3M expects image input to be [0-255]
+  embedding = mcr(preprocessed_image.cuda())
 print(embedding.shape) # [1, 2048]

@@ -55,7 +55,7 @@ You can use this codebase for the following purposes:
     import mcr
     encoder = mcr.load_model(ckpt_path=<path_to_downloaded_ckpt>)
 
-    # please see more details in utils/example.py TODO
+    # please see more details in utils/example.py
 
 ## 2. Train MCR from scratch.
 
