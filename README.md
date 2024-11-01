@@ -4,7 +4,7 @@
   |
   <a href="https://arxiv.org/abs/2410.22325"><strong>arXiv</strong></a>
   |
-  <a href="https://x.com/LuccaChiang"><strong>Twitter</strong></a> 
+  <a href="https://x.com/LuccaChiang/status/1851651164187635732"><strong>Twitter</strong></a> 
   | <a href="https://huggingface.co/GqJiang/robots-pretrain-robots"><strong>Dataset & Model</strong></a>
 
   <a href="https://luccachiang.github.io/">Guangqi Jiang*</a>, 
@@ -23,6 +23,7 @@
 
 # 🗞️ News
 
+- **2024-10-31** Release code!
 - **2024-10-29** Release our paper on ArXiv.
 
 
@@ -33,7 +34,7 @@ Clone this repository and create a conda environment:
     git clone https://github.com/luccachiang/robots-pretrain-robots.git
     cd robots-pretrain-robots
     conda remove -n mcr --all
-    conda create -n mcr python=3.8
+    conda env create -f mcr/mcr.yaml
     conda activate mcr
 
 
@@ -47,28 +48,25 @@ Our processed DROID subset and pre-trained model checkpoints are availble on our
 # 💻 Usage
 You can use this codebase for the following purposes:
 
-## 1.Use our released pre-trained checkpoints.
+## 1. Use our released pre-trained checkpoints.
 
     # first, download our model checkpoint from Huggingface
-    # then run
+    # then get a torchvision.models.resnet50
     import mcr
-    mcr.load_model()
+    encoder = mcr.load_model(ckpt_path=<path_to_downloaded_ckpt>)
 
+    # please see more details in utils/example.py TODO
 
-    # please see more details in utils/example.py
+## 2. Train MCR from scratch.
 
-```
-import mcr
-```
-
-## 2.Train MCR from scratch.
-
-    # first, download our pre-trained dataset from Huggingface
+    # first, download our pre-trained dataset from Huggingface TODO
     # then run
+    cd mcr
     bash train_mcr.sh
     # you can get a full list of parameter helps in train_mcr.sh
 
-## 3.Train MCR with custom dataset.
+## 3. Train MCR with custom dataset.
+TODO
 We also provide a guidance on how to train MCR on your own dataset. Basically, you need to modify code in xxx, xxx, and xxx.
 
 
