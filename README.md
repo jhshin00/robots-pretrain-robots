@@ -43,7 +43,7 @@ Install MCR:
     pip install -e .
 
 # 📚 Data and checkpoints
-Our processed DROID subset and pre-trained model checkpoints are availble on our [Huggingface repository](https://huggingface.co/GqJiang/robots-pretrain-robots).
+Our processed DROID subset (coming soon) and pre-trained model checkpoints are availble on our [Huggingface repository](https://huggingface.co/GqJiang/robots-pretrain-robots).
 
 # 💻 Usage
 You can use this codebase for the following purposes:
