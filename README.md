@@ -43,7 +43,19 @@ Install MCR:
     pip install -e .
 
 # 📚 Data and checkpoints
-Our processed DROID subset (coming soon) and pre-trained model checkpoints are availble on our [Huggingface repository](https://huggingface.co/GqJiang/robots-pretrain-robots).
+Our processed DROID subset (coming soon) and pre-trained model checkpoints are availble on our [Huggingface repository](https://huggingface.co/GqJiang/robots-pretrain-robots). Our dataset has the following structure. As long as your dataset share the same, you can directly train MCR on your custom dataset.
+```
+/droid_processed
+    /2023-02-28_Tue_Feb_28_20_25_47_2023
+        /exterior_image_1_left
+            /0.png
+            /1.png
+            ...
+        /exterior_image_2_left
+        other_data.pkl # proprioception and actions
+    /2023-02-28_Tue_Feb_28_20_26_11_2023
+    ...
+```
 
 # 💻 Usage
 You can use this codebase for the following purposes:
@@ -66,8 +78,7 @@ You can use this codebase for the following purposes:
     # you can get a full list of parameter helps in train_mcr.sh
 
 ## 3. Train MCR with custom dataset.
-TODO
-We also provide a guidance on how to train MCR on your own dataset. Basically, you need to modify code in xxx, xxx, and xxx.
+We also provide a guidance on how to train MCR on your own dataset. You can either process your data into the structure we provide above or modify the codebase to write your own dataloader. TODO Specifically, you need to modify code in xxx, xxx, and xxx.
 
 
 # 🧭 Code Navigation
