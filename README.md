@@ -23,7 +23,7 @@
 
 # 🗞️ News
 
-- **2024-10-31** Release code!
+- **2024-10-31** Release code!!
 - **2024-10-29** Release our paper on ArXiv.
 
 
