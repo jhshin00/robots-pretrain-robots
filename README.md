@@ -54,7 +54,7 @@ pip install -r dataset_requirements.txt
 # download raw dataset from the DROID website https://droid-dataset.github.io/
 gsutil -m cp -r gs://gresearch/robotics/droid <your_local_path> # we use the full 1.7TB dataset
 ```
-Then please refer to the [data extraction script](scripts/process_data_multicore.py) and [data cleaning script](scripts/delete_short_videos.py) to get the subset, which should also be around 1.7TB. You will get a dataset with the following structure. As long as your dataset share the same structure, you can directly train MCR on your custom dataset with slight modifications on the dataloader. Otherwise you need to write your own dataloader.
+Then please refer to the [data extraction script](scripts/process_data_multicore.py) and [data cleaning script](scripts/delete_short_videos.py) to get the subset, which should also be around 1.7TB. You may search for `TODO` in these files. You will get a dataset with the following structure. As long as your dataset share the same structure, you can directly train MCR on your custom dataset with slight modifications on the dataloader. Otherwise you need to write your own dataloader.
 ```
 /droid_processed
     /2023-02-28_Tue_Feb_28_20_25_47_2023
