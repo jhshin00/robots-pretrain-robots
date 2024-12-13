@@ -23,7 +23,8 @@
 
 # 🗞️ News
 
-- **2024-10-31** Release code!!
+- **2024-12-13** Refine the README and add dataset-related files.
+- **2024-10-31** Release code!
 - **2024-10-29** Release our paper on ArXiv.
 
 
@@ -43,7 +44,17 @@ Install MCR:
     pip install -e .
 
 # 📚 Data and checkpoints
-Our processed DROID subset (coming soon, feel free to contact [Guangqi Jiang](https://luccachiang.github.io/) if you need the dataset) and pre-trained model checkpoints are availble on our [Huggingface repository](https://huggingface.co/GqJiang/robots-pretrain-robots). Our dataset has the following structure. As long as your dataset share the same structure, you can directly train MCR on your custom dataset. Otherwise you need to write your own dataloader.
+Our pre-trained model checkpoints are availble on our [Huggingface repository](https://huggingface.co/GqJiang/robots-pretrain-robots). Please follow these steps to prepare the dataset we use in the paper.
+```
+# install packages
+cd robots-pretrain-robots
+apt-get install libgmp-dev
+pip install -r dataset_requirements.txt
+
+# download raw dataset from the DROID website https://droid-dataset.github.io/
+gsutil -m cp -r gs://gresearch/robotics/droid <your_local_path> # we use the full 1.7TB dataset
+```
+Then please refer to the [data extraction script](scripts/process_data_multicore.py) and [data cleaning script](scripts/delete_short_videos.py) to get the subset, which should also be around 1.7TB. You will get a dataset with the following structure. As long as your dataset share the same structure, you can directly train MCR on your custom dataset with slight modifications on the dataloader. Otherwise you need to write your own dataloader.
 ```
 /droid_processed
     /2023-02-28_Tue_Feb_28_20_25_47_2023
@@ -71,18 +82,29 @@ You can use this codebase for the following purposes:
 
 ## 2. Train MCR from scratch.
 
-    # first, download our pre-trained dataset from Huggingface TODO
+    # first, prepare the dataset with scripts we provide
     # then run
     cd mcr
     bash train_mcr.sh
     # you can get a full list of parameter helps in train_mcr.sh
 
 ## 3. Train MCR with custom dataset.
-We also provide a guidance on how to train MCR on your own dataset. You can either process your data into the structure we provide above or modify the codebase to write your own dataloader. TODO Specifically, you need to modify code in xxx, xxx, and xxx.
+We also provide a guidance on how to train MCR on your own dataset. You can either process your data into the structure we provide above or modify the codebase to write your own dataloader. 
+1. Refer to [data_loaders.py](mcr/utils/data_loaders.py) to write your own dataloader. Mainly pay attention to the `_sample` method.
+2. Refer to [train_representation.py](mcr/train_representation.py) to construct your workspace. You may need to modify the dataset-related code and the `train` method to properly iterate your dataset.
+3. Refer to [train_mcr.sh](mcr/train_mcr.sh) to launch the training and override hyper-paremeters.
+4. (Optional) Losses are defined in [trainer.py](mcr/trainer.py). If necessary, debug this file.
 
 
 # 🧭 Code Navigation
-    todo
+[mcr](mcr) contains our pre-training codebase. We introduce some important files below.
+
+    cfgs/config_rep.yaml                # pre-training configs
+    models/models_mcr.py                # MCR model architecture, backbone, actor, and some projectors here
+    utils/data_loaders.py               # dataloaders
+    train_mcr.sh                        # training script, override configs here
+    train_representation.py             # training workspace
+    trainer.py                          # losses are defined here
 
 # 🏷️ Licence
 This repository is released under the MIT license. See [LICENSE](LICENSE) for additional details.
