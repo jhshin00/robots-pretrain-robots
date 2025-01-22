@@ -23,6 +23,7 @@
 
 # 🗞️ News
 
+- **2025-01-22** Our paper is accepted by ICLR 2025!
 - **2024-12-13** Refine the README and add dataset-related files.
 - **2024-10-31** Release code!
 - **2024-10-29** Release our paper on ArXiv.
