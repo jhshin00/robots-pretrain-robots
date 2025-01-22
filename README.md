@@ -15,7 +15,7 @@
   <a href="http://hxu.rocks/">Huazhe Xu</a>
 
 
-**In submission, 2024**
+**ICLR, 2025**
 
 <div align="center">
   <img src="resources/overview.png" alt="mcr" width="100%">
