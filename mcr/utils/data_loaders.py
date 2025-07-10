@@ -25,12 +25,15 @@ import pickle
 from torchvision.utils import save_image
 import json
 import random
+import h5py
 
 def get_ind(vid, index, ds):
     if ds == "ego4d":
         return torchvision.io.read_image(f"{vid}/{index:06}.jpg")
     elif ds == 'droid':
         return torchvision.io.read_image(f"{vid}/{index}.png", mode=torchvision.io.image.ImageReadMode.RGB)
+    elif ds == 'libero':
+        return 0
     else:
         raise NameError('Invalid Dataset')
 
@@ -108,6 +111,230 @@ class MCRBuffer(IterableDataset):
     def __iter__(self):
         while True:
             yield self._sample()
+
+## Data Loader for LIBERO
+class MCRBufferLibero(IterableDataset):
+    def __init__(
+            self,
+            liberopath,
+            num_workers,
+            alpha,
+            datasources,
+            doaug = "none",
+            state_list_used = ['obs/ee_states', 'obs/gripper_states', 'obs/joint_states'],
+            state_window = 1,
+            use_action = False,
+            view_keys_used = ['obs/agentview_rgb', 'obs/eye_in_hand_rgb'],
+            tasks = ['libero_10', 'libero_90', 'goal', 'object', 'spatial'],
+        ):
+        
+        self._num_workers = max(1, num_workers)
+        self.alpha = alpha
+        self.data_sources = datasources
+        self.doaug = doaug
+        self.dataset_path = liberopath
+        self.state_list_used = state_list_used
+        self.state_window = state_window
+        self.use_action = use_action
+        self.action_key = 'actions'
+        self.view_keys = view_keys_used
+        self.datasetlen = 0
+
+        # Augmentations
+        if doaug in ["rc", "rctraj"]:
+            self.aug = torch.nn.Sequential(
+                transforms.RandomResizedCrop(224, scale=(0.5, 1.0)),
+            )
+        elif doaug in ["rctraj_eval"]:
+            self.aug = torch.nn.Sequential(
+            transforms.Resize(256),
+            transforms.CenterCrop(224),
+            )
+        else:
+            self.aug = lambda a : a
+
+        # Load Data
+        if "libero" in self.data_sources:
+            print("Libero")
+            self.loaded_dataset = []
+
+            for task in tasks:
+                task_dir = os.path.join(self.dataset_path, task)
+                if not os.path.isdir(task_dir):
+                    continue
+                for fname in os.listdir(task_dir):
+                    if not fname.endswith('.hdf5'):
+                        continue
+                    lang_inst = os.path.splitext(fname)[0]
+                    path = os.path.join(task_dir, fname)
+                    data = h5py.File(path, 'r')['data']
+
+                    for demo in data:
+                        if 
+                        traj = {}
+                        for key in state_list_used or view_keys_used:
+                            traj[key] = data[demo][key]
+                        
+                        traj['actions'] = data[demo]['actions']
+                        traj['lang'] = lang_inst
+
+                        self.loaded_dataset.append(traj)
+                        self.datasetlen += 1
+        else:
+            raise NameError('Invalid Dataset')
+                
+
+    def _sample(self):
+        t0 = time.time()
+        ds = random.choice(self.data_sources)
+
+        vidid = np.random.randint(0, self.datasetlen)
+        traj_path = self.loaded_dataset[vidid]
+
+
+import os
+import random
+import h5py
+import numpy as np
+import torch
+from torch.utils.data import IterableDataset
+from torchvision import transforms
+
+import os
+import random
+import h5py
+import numpy as np
+import torch
+from torch.utils.data import IterableDataset
+from torchvision import transforms
+
+class MCRBufferLibero(IterableDataset):
+    def __init__(
+        self,
+        liberopath: str,
+        num_workers: int,
+        alpha: float,
+        datasources: list,
+        doaug: str = 'none',
+        state_list_used: list = ['states'],
+        state_window: int = 1,
+        use_action: bool = False,
+        view_keys_used: list = ['obs/agentview_rgb', 'obs/eye_in_hand_rgb'],
+        tasks: list = ['libero_10', 'libero_90', 'goal', 'object', 'spatial'],
+    ):
+        super().__init__()
+        self._num_workers = max(1, num_workers)
+        self.alpha = alpha
+        self.data_sources = datasources
+        self.doaug = doaug
+        self.dataset_path = liberopath
+        self.state_list_used = state_list_used
+        self.state_window = state_window
+        self.use_action = use_action
+        self.action_key = 'actions'
+        self.view_keys = view_keys_used
+
+        # 이미지 증강 설정
+        if doaug in ['rc', 'rctraj']:
+            self.aug = transforms.RandomResizedCrop(224, scale=(0.5, 1.0))
+        elif doaug == 'rctraj_eval':
+            self.aug = transforms.Compose([
+                transforms.Resize(256),
+                transforms.CenterCrop(224),
+            ])
+        else:
+            self.aug = lambda x: x
+
+        # Libero task별 하위 디렉터리에서 HDF5 파일 로드
+        if 'libero' in self.data_sources:
+            self.files = {}       # key: (task, lang_inst) -> h5py.File
+            self.episodes = []    # list of (task, lang_inst, ep_group)
+
+            for task in tasks:
+                task_dir = os.path.join(self.dataset_path, task)
+                if not os.path.isdir(task_dir):
+                    continue
+                # 각 폴더 내 .hdf5 파일
+                for fname in os.listdir(task_dir):
+                    if not fname.endswith('.hdf5'):
+                        continue
+                    lang_inst = os.path.splitext(fname)[0]
+                    path = os.path.join(task_dir, fname)
+                    hf = h5py.File(path, 'r')
+                    self.files[(task, lang_inst)] = hf
+                    # 'data/demo_*' 그룹 순회
+                    for demo in hf['data']:
+                        ep_group = f"data/{demo}"
+                        self.episodes.append((task, lang_inst, ep_group))
+        else:
+            raise NameError('Invalid Dataset')
+
+    def _sample(self):
+        # 무작위 에피소드 선택
+        task, lang_inst, ep_group = random.choice(self.episodes)
+        hf = self.files[(task, lang_inst)]
+        grp = hf[ep_group]
+        vidlen = grp[self.action_key].shape[0]
+
+        # 시간 인덱스 샘플링
+        start = random.randint(1, max(1, int(2 + self.alpha * vidlen) - 1))
+        end   = random.randint(max(1, int((1 - self.alpha) * vidlen) - 1), vidlen - 1)
+        s1    = random.randint(2, vidlen - 1)
+        s0    = random.randint(1, s1 - 1)
+        s2    = random.randint(s1, vidlen - 1)
+
+        # 이미지 로드 및 증강
+        ims = []
+        for idx in [start, end, s0, s1, s2]:
+            view = random.choice(self.view_keys)
+            img_np = grp[view][idx]                  # HxWxC, uint8
+            img = torch.from_numpy(img_np).permute(2, 0, 1).float()
+            img = (self.aug(img / 255.0) * 255.0)
+            ims.append(img)
+        images = torch.stack(ims, dim=0)             # (5, C, H, W)
+
+        # s0 시점 상태 벡터
+        parts = [grp[k][s0] for k in self.state_list_used]
+        state_array = torch.tensor(np.concatenate(parts)).float()
+
+        # 슬라이딩 윈도우 상태 및 액션
+        full_s0, full_s2 = [], []
+        s0_start = max(0, s0 - self.state_window // 2)
+        s2_start = max(0, s2 - self.state_window // 2)
+        for i in range(self.state_window):
+            i0 = min(s0_start + i, vidlen - 1)
+            i2 = min(s2_start + i, vidlen - 1)
+            for k in self.state_list_used:
+                full_s0.append(grp[k][i0])
+                full_s2.append(grp[k][i2])
+            if self.use_action and i < self.state_window - 1:
+                full_s0.append(grp[self.action_key][i0])
+                full_s2.append(grp[self.action_key][i2])
+        full_state = {
+            's0': torch.tensor(np.concatenate(full_s0)).float(),
+            's2': torch.tensor(np.concatenate(full_s2)).float(),
+        }
+
+        # 액션 시퀀스
+        acts = [grp[self.action_key][i] for i in [start, end, s0, s1, s2]]
+        actions = torch.tensor(np.stack(acts)).float()  # (5, action_dim)
+
+        # label: (task, language instruction)
+        label = f"{task}/{lang_inst}"
+
+        return images, label, state_array, full_state, actions
+
+    def __iter__(self):
+        while True:
+            yield self._sample()
+
+
+
+
+
+
+
+
 
 ## Data Loader for Droid
 class MCRBufferDroid(IterableDataset):
