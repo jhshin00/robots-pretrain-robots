@@ -17,7 +17,7 @@ import numpy as np
 import torch
 from mcr.utils import utils
 from mcr.trainer import Trainer
-from mcr.utils.data_loaders import MCRBuffer, MCRBufferDroid
+from mcr.utils.data_loaders import MCRBuffer, MCRBufferDroid, MCRBufferLibero
 from mcr.utils.logger import Logger
 import time
 
@@ -45,6 +45,8 @@ class Workspace:
             sources = ["ego4d"]
         elif self.cfg.dataset == "droid":
             sources = ["droid"]
+        elif self.cfg.dataset == "libero":
+            sources = ["libero"]
         else:
             raise NameError('Invalid Dataset')
 
@@ -62,6 +64,15 @@ class Workspace:
                                         alpha = 0, datasources=sources, doaug = self.cfg.doaug + "_eval", 
                                         state_list_used=self.cfg.agent.state_list, state_window=self.cfg.agent.state_window, use_action=self.cfg.agent.use_action,
                                         view_keys_used=self.cfg.view_list)
+        elif self.cfg.dataset == "libero":
+            train_iterable = MCRBufferLibero(self.cfg.datapath, self.cfg.num_workers, 
+                                            alpha=self.cfg.alpha, datasources=sources, doaug=self.cfg.doaug,
+                                            state_list_used=self.cfg.agent.state_list, state_window=self.cfg.agent.state_window, use_action=self.cfg.agent.use_action,
+                                            view_keys_used=self.cfg.view_list, tasks=self.cfg.tasks)
+            val_iterable = MCRBufferLibero(self.cfg.datapath, self.cfg.num_workers, 
+                                            alpha=0, datasources=sources, doaug=self.cfg.doaug + "_eval",
+                                            state_list_used=self.cfg.agent.state_list, state_window=self.cfg.agent.state_window, use_action=self.cfg.agent.use_action,
+                                            view_keys_used=self.cfg.view_list, tasks=self.cfg.tasks)
         else:
             raise NameError('Invalid Dataset')
 

@@ -1,0 +1,42 @@
+save_snapshot: true
+load_snap: ''
+num_workers: 16
+batch_size: 32
+train_steps: 500000
+eval_freq: 20000
+seed: 1
+device: cuda
+experiment: train_mcr
+lr: 0.0001
+alpha: 0.2
+dataset: libero
+use_wandb: false
+wandbproject: null
+wandbuser: null
+doaug: none
+datapath: null
+view_list:
+- obs/agentview_rgb
+- obs/eye_in_hand_rgb
+task:
+- libero_90
+- libero_goal
+- libero_object
+- libero_spatial
+agent:
+  _target_: mcr.MCR
+  device: ${device}
+  lr: ${lr}
+  hidden_dim: 1024
+  size: 50
+  tcnweight: 1.0
+  l2dist: true
+  bs: ${batch_size}
+  align_state_weight: 1.0
+  state_window: 3
+  use_action: true
+  state_list:
+  - obs/ee_states
+  - obs/gripper_states
+  - obs/joint_states
+  bc_weight: 1.0
